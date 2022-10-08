@@ -44,4 +44,5 @@ app.*.map.json
 /android/app/release
 
 #Secret
-/lib/auth/
+/lib/auth/secrets.dart
+/lib/auth/ignore/
