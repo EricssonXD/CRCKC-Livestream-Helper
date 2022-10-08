@@ -1,4 +1,6 @@
 // import 'package:crckclivestreamhelper/model/streamdatamodel.dart';
+import 'package:flutter/services.dart';
+
 import '../controller/streamdata.dart';
 import 'package:flutter/material.dart';
 
@@ -15,11 +17,28 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
   TextEditingController verse = TextEditingController();
 
   // final _formKey = GlobalKey<FormState>();
-  void _submitForm() {
-    List<String> row = [speaker.text, topic.text, verse.text];
-    // print(row);
-    CrckcHelperAPI.insert(row);
-  }
+  Future _submitForm() => showDialog(
+      context: context,
+      builder: (context) {
+        submit() async {
+          Navigator.of(context).pop();
+        }
+
+        List<String> row = [speaker.text, topic.text, verse.text];
+        // print(row);
+        CrckcHelperAPI.insert(row);
+        return AlertDialog(
+          title:
+              Text("Data Updated\n講員: ${row[0]}\n講題: ${row[1]}\n經文: ${row[2]}"),
+          actions: [
+            // TextButton(
+            //     onPressed: (() => SystemChannels.platform
+            //         .invokeMethod<void>('SystemNavigator.pop')),
+            //     child: const Text("Exit")),
+            TextButton(onPressed: (() => submit()), child: const Text("Done"))
+          ],
+        );
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +56,7 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: const InputDecoration(
-                    labelText: "Speaker",
+                    labelText: "講員",
                     border: OutlineInputBorder(),
                   ),
                   controller: speaker,
@@ -47,7 +66,7 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: const InputDecoration(
-                    labelText: "Topic",
+                    labelText: "講題",
                     border: OutlineInputBorder(),
                   ),
                   controller: topic,
@@ -57,7 +76,7 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: const InputDecoration(
-                    labelText: "Verse",
+                    labelText: "經文",
                     border: OutlineInputBorder(),
                   ),
                   controller: verse,
