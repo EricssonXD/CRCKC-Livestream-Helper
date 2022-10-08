@@ -1,0 +1,16 @@
+name: Gh-Pages
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    run: echo $SECRET_DATA | base64 -d > lib/auth/secrets.dart env: SECRET_DATA: ${{ secrets.SECRET_DATA }}
+    steps:
+      - uses: actions/checkout@v2 # Only works with v2
+      - uses: subosito/flutter-action@v1
+      - uses: bluefireteam/flutter-gh-pages@v7
+        with:
+          baseHref: /CRCKC-Livestream-Helper/
