@@ -1,6 +1,5 @@
 import 'package:gsheets/gsheets.dart';
 import 'package:crckclivestreamhelper/auth/secrets.dart';
-import '../auth/encrypt.dart';
 
 class CrckcHelperAPI {
   static final _credentials = SECRETS.gSheetCredentials; //Secret
