@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.5
   gsheets: ^0.4.2
+  encrypt: ^5.0.1
 
 dev_dependencies:
   flutter_test:

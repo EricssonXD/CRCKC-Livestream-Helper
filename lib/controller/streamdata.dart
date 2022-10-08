@@ -1,14 +1,18 @@
 import 'package:gsheets/gsheets.dart';
 import 'package:crckclivestreamhelper/auth/secrets.dart';
+import '../auth/encrypt.dart';
 
 class CrckcHelperAPI {
-  static const _credentials = SECRETS.gSheetCredentials; //Secret
-
-  static const _spreadsheetId = SECRETS.gSheetId; //Secret
-  static final _gsheets = GSheets(_credentials);
+  static final _credentials =
+      MyEncryptionDecryption.decryptAES(SECRETS.gSheetCredentials); //Secret
+  static final _spreadsheetId =
+      MyEncryptionDecryption.decryptAES(SECRETS.gSheetId);
+  //Secret
+  static late var _gsheets;
   static Worksheet? _userSheet;
 
   static Future init() async {
+    _gsheets = GSheets(_credentials);
     final spreadsheet = await _gsheets.spreadsheet(_spreadsheetId);
     _userSheet = await _getWorkSheet(spreadsheet, title: 'DataToday');
     _userSheet!.values.insertRow(1, ["Speaker", "Topic", "Verse"]);
