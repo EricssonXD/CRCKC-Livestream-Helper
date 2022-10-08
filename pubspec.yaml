@@ -39,6 +39,7 @@ dependencies:
   http: ^0.13.5
   gsheets: ^0.4.2
   encrypt: ^5.0.1
+  flutter_native_splash: ^2.2.10+1
 
 dev_dependencies:
   flutter_test:
