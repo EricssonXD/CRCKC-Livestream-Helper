@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2 # Only works with v2
-      - run: ls; echo $SECRET_DATA | base64 -d > lib/auth/secrets.dart 
+      - run: echo $SECRET_DATA | base64 -d > lib/auth/secrets.dart 
         env: 
           SECRET_DATA: ${{ secrets.SECRET_DATA }}
       - uses: subosito/flutter-action@v1

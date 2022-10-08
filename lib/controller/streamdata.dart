@@ -2,9 +2,9 @@ import 'package:gsheets/gsheets.dart';
 import 'package:crckclivestreamhelper/auth/secrets.dart';
 
 class CrckcHelperAPI {
-  static const _credentials = SECRETS.gSheetCredentials; //Secret
-
-  static const _spreadsheetId = SECRETS.gSheetId; //Secret
+  static final _credentials = SECRETS.gSheetCredentials; //Secret
+  static final _spreadsheetId = SECRETS.gSheetId;
+  //Secret
   static final _gsheets = GSheets(_credentials);
   static Worksheet? _userSheet;
 
