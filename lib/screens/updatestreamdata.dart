@@ -20,22 +20,25 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
   Future _submitForm() => showDialog(
       context: context,
       builder: (context) {
-        submit() async {
+        List<String> row = [speaker.text, topic.text, verse.text];
+
+        submit(bool confirm) async {
           Navigator.of(context).pop();
+          if (confirm) CrckcHelperAPI.insert(row);
         }
 
-        List<String> row = [speaker.text, topic.text, verse.text];
-        // print(row);
-        CrckcHelperAPI.insert(row);
         return AlertDialog(
-          title:
-              Text("Data Updated\n講員: ${row[0]}\n講題: ${row[1]}\n經文: ${row[2]}"),
+          title: Text(
+              "Confirm Changed Data?\n\n講員: ${row[0]}\n講題: ${row[1]}\n經文: ${row[2]}"),
           actions: [
             // TextButton(
             //     onPressed: (() => SystemChannels.platform
             //         .invokeMethod<void>('SystemNavigator.pop')),
             //     child: const Text("Exit")),
-            TextButton(onPressed: (() => submit()), child: const Text("Done"))
+            TextButton(
+                onPressed: (() => submit(false)), child: const Text("Cancel")),
+            TextButton(
+                onPressed: (() => submit(true)), child: const Text("Confirm")),
           ],
         );
       });
