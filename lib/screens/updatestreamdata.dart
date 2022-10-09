@@ -15,6 +15,7 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
   TextEditingController speaker = TextEditingController();
   TextEditingController topic = TextEditingController();
   TextEditingController verse = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   // final _formKey = GlobalKey<FormState>();
   Future _submitForm() => showDialog(
@@ -53,6 +54,7 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
           child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
+          key: _formKey,
           child: Column(
             children: [
               Padding(
@@ -63,6 +65,12 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
                     border: OutlineInputBorder(),
                   ),
                   controller: speaker,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
                 ),
               ),
               Padding(
@@ -73,6 +81,12 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
                     border: OutlineInputBorder(),
                   ),
                   controller: topic,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
                 ),
               ),
               Padding(
@@ -83,10 +97,24 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
                     border: OutlineInputBorder(),
                   ),
                   controller: verse,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
                 ),
               ),
               TextButton(
-                  onPressed: (() => _submitForm()), child: const Text("Submit"))
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _submitForm();
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   const SnackBar(content: Text('Processing Data')),
+                      // );
+                    }
+                  },
+                  child: const Text("Submit"))
             ],
           ),
         ),
