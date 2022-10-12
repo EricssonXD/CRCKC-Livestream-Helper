@@ -2,8 +2,8 @@ import 'package:gsheets/gsheets.dart';
 import 'package:crckclivestreamhelper/auth/secrets.dart';
 
 class CrckcHelperAPI {
-  static final _credentials = SECRETS.gSheetCredentials; //Secret
-  static final _spreadsheetId = SECRETS.gSheetId;
+  static const _credentials = SECRETS.gSheetCredentials; //Secret
+  static const _spreadsheetId = SECRETS.gSheetId;
   //Secret
 
   static final _gsheets = GSheets(_credentials);
@@ -30,5 +30,9 @@ class CrckcHelperAPI {
   static Future insert(List<String> rowList) async {
     if (_userSheet == null) return;
     _userSheet!.values.insertRow(2, rowList);
+  }
+
+  static Future<List<String>> get() async {
+    return _userSheet!.values.row(2);
   }
 }

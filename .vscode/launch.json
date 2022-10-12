@@ -14,6 +14,30 @@
           "--web-port",
           "8080"
         ]
+      },
+
+
+
+      {
+        "name": "Windows",
+        "type": "dart",
+        "request": "launch",
+        "program": "lib/main.dart",
+        "args": [
+          "-d",
+          "windows",
+        ]
+      },
+
+      {
+        "name": "Android",
+        "type": "dart",
+        "request": "launch",
+        "program": "lib/main.dart",
+        "args": [
+          "-d",
+          "emulator-5554",
+        ]
       }
     ]
   }
