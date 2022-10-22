@@ -13,7 +13,15 @@ class Youtube {
     _youtubeClient = YouTubeApi(GoogleAPI.httpClient);
   }
 
-  static Future<String> scheduleStream() async {
+  ///Output = [LivestreamControlURL, WhatsappMessage]
+  static Future<List> scheduleStream() async {
+    // return [
+    //   "https://www.youtube.com/,
+    //   '''TestMessage
+    // Second Line
+    // 中文'''
+    // ];
+    // Map _data = {"ytControlUrl": Null, "message": Null};
     //Get Stream Time
     DateTime getStreamTime() {
       DateTime streamTime = DateTime.now();
@@ -70,7 +78,7 @@ class Youtube {
       String liveStreamUrl =
           "https://studio.youtube.com/video/${response?.id}/livestreaming";
       // js.context.callMethod('open', [liveStreamUrl, '_blank']);
-
+      // _data["ytControlUrl"] = liveStreamUrl;
       String whatsappMessage =
           '''${streamTime.year}年${streamTime.month}月${streamTime.day}日 禮中堂主日崇拜
 講員：${data[0]}
@@ -83,12 +91,12 @@ $ytlink
 
 「主日崇拜網上出席表」連結（請以個人單位填寫）：
 ${SECRETS.churchForm} ''';
-
-      return whatsappMessage;
+      // _data["message"] = whatsappMessage;
+      return [liveStreamUrl, whatsappMessage];
     } catch (e) {
       // ignore: avoid_print
       print("Error Occured:\n$e");
-      return '';
+      return [];
     }
   }
 }

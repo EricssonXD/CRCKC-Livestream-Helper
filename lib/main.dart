@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'screens/index.dart';
 import 'controller/streamdata.dart';
 import 'provider/google.dart';
+import 'provider/debug.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,6 +13,7 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => GoogleProvider()),
+      ChangeNotifierProvider(create: (_) => DebugController()),
     ],
     child: const MyApp(),
   ));

@@ -55,7 +55,7 @@ https://forms.gle/95cuCRnGk2LdGJZ39 """;
           "Access-Control-Allow-Origin": "*"
         },
         body: jsonEncode(<String, String>{
-          'title': "YYYYEWEEET",
+          // 'title': "YYYYEWEEET",
           'message': text,
         }),
       );
@@ -63,6 +63,7 @@ https://forms.gle/95cuCRnGk2LdGJZ39 """;
       webLink = response.body;
     } catch (e) {
       print(e);
+      launchUrlString("https://web.whatsapp.com");
     }
 
     if (useSelenium) return;
@@ -76,28 +77,29 @@ https://forms.gle/95cuCRnGk2LdGJZ39 """;
       body: Center(
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FractionallySizedBox(
+                widthFactor: 0.2,
+                // widthFactor: 0.6,
+                child: AspectRatio(
+                  aspectRatio: 10 / 3,
                   child: ElevatedButton(
                       onPressed: () async {
                         var data = await Youtube.scheduleStream();
-
-                        if (!_useSelenium) {
-                          setClippboard(data);
+                        if (data.isNotEmpty) {
+                          callLocalFlask(data[1], useSelenium: _useSelenium);
+                          launchUrlString(data[0]);
                         }
-
-                        callLocalFlask(data, useSelenium: _useSelenium);
                       },
                       child: const Text("Schedule Stream")),
                 ),
-                Expanded(
-                    child: ElevatedButton(
-                        onPressed: () =>
-                            callLocalFlask("yo", useSelenium: _useSelenium),
-                        child: const Text("Testing"))),
-              ],
-            )
+              ),
+            ),
+            ElevatedButton(
+                onPressed: () =>
+                    callLocalFlask("yo", useSelenium: _useSelenium),
+                child: const Text("Testing")),
           ],
         ),
       ),

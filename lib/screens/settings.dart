@@ -1,5 +1,6 @@
 import 'package:crckclivestreamhelper/provider/google.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis/chat/v1.dart';
 import '../controller/login.dart';
 import '../controller/youtube.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -20,7 +21,7 @@ class SettingsState extends State<Settings> {
     super.initState();
   }
 
-  Widget _buildBody() {
+  Widget _loginPage() {
     var user = GoogleAPI.currentUser;
     if (user != null) {
       return Column(
@@ -43,8 +44,10 @@ class SettingsState extends State<Settings> {
             child: const Text('SIGN OUT'),
           ),
           ElevatedButton(
-            onPressed: () => Youtube.scheduleStream(), // ignore: avoid_print
-            child: const Text('REFRESH'),
+            onPressed: () => context.read<GoogleProvider>().setLoggedin(!context
+                .read<GoogleProvider>()
+                .loggedIn), // ignore: avoid_print
+            child: const Text('DEBUG SIGNIN'),
           ),
           // ElevatedButton(
           //   onPressed: () => context.read<GoogleProvider>().setLoggedin(!context
@@ -72,16 +75,46 @@ class SettingsState extends State<Settings> {
     }
   }
 
+  void goToSignInPage() {
+    // Here we are pushing the new view into the Navigator stack. By using a
+    // MaterialPageRoute we get standard behaviour of a Material app, which will
+    // show a back button automatically for each platform on the left top corner
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      void back() {
+        Navigator.of(context).pop();
+      }
+
+      return Scaffold(
+          appBar: AppBar(
+              leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => back(),
+          )),
+          body: Center(child: _loginPage()));
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
-    context.watch<GoogleProvider>().loggedIn;
+    // context.watch<GoogleProvider>().loggedIn;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Google Sign In'),
+        actions: [
+          ElevatedButton(
+            onPressed: () => context.read<GoogleProvider>().setLoggedin(!context
+                .read<GoogleProvider>()
+                .loggedIn), // ignore: avoid_print
+            child: const Text('DEBUG SIGNIN'),
+          ),
+        ],
       ),
       body: ConstrainedBox(
         constraints: const BoxConstraints.expand(),
-        child: _buildBody(),
+        child: ElevatedButton(
+          onPressed: () => goToSignInPage(),
+          child: Text("Sign In"),
+        ),
       ),
     );
   }

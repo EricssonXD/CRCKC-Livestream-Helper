@@ -7,7 +7,7 @@ class GoogleProvider with ChangeNotifier {
 
   setLoggedin(bool value) {
     _loggedIn = value;
-    print("App is now Logged ${_loggedIn ? "In" : "Off"}");
+    // print("App is now Logged ${_loggedIn ? "In" : "Off"}");
     notifyListeners();
   }
 }
