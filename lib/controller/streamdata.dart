@@ -12,7 +12,8 @@ class CrckcHelperAPI {
   static Future init() async {
     final spreadsheet = await _gsheets.spreadsheet(_spreadsheetId);
     _userSheet = await _getWorkSheet(spreadsheet, title: 'DataToday');
-    _userSheet!.values.insertRow(1, ["Speaker", "Topic", "Verse"]);
+    _userSheet!.values
+        .insertRow(1, ["Speaker", "Topic", "Verse", "Update Time"]);
   }
 
   static Future<Worksheet> _getWorkSheet(
@@ -27,8 +28,10 @@ class CrckcHelperAPI {
     }
   }
 
-  static Future insert(List<String> rowList) async {
+  static Future addData(List<String> rowList) async {
     if (_userSheet == null) return;
+    _userSheet!.deleteRow(11);
+    await _userSheet!.insertRow(2);
     _userSheet!.values.insertRow(2, rowList);
   }
 

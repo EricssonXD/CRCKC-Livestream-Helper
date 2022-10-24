@@ -74,8 +74,8 @@ class _HomeState extends State<Home> {
             label: 'Update Data',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.login),
-            label: 'Login',
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
           // BottomNavigationBarItem(
           //   icon: Icon(Icons.school),
@@ -101,8 +101,8 @@ class _HomeState extends State<Home> {
             label: 'Update Data',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.login),
-            label: 'Login',
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.video_call_rounded),

@@ -1,5 +1,7 @@
 // import 'package:crckclivestreamhelper/model/streamdatamodel.dart';
 
+import 'package:crckclivestreamhelper/provider/debug.dart';
+
 import '../controller/streamdata.dart';
 import 'package:flutter/material.dart';
 
@@ -20,11 +22,20 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
   Future _submitForm() => showDialog(
       context: context,
       builder: (context) {
-        List<String> row = [speaker.text, topic.text, verse.text];
+        String timeNow = DateTime.now().toString();
+        List<String> row = [
+          speaker.text,
+          topic.text,
+          verse.text,
+          //add an "a" to prevent weird bug
+          "${timeNow}a",
+        ];
 
         submit(bool confirm) async {
           Navigator.of(context).pop();
-          if (confirm) CrckcHelperAPI.insert(row);
+          if (confirm) {
+            CrckcHelperAPI.addData(row);
+          }
         }
 
         return AlertDialog(
@@ -106,7 +117,8 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
               ),
               TextButton(
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
+                    if (_formKey.currentState!.validate() ||
+                        DebugSingleton().debug) {
                       _submitForm();
                       // ScaffoldMessenger.of(context).showSnackBar(
                       //   const SnackBar(content: Text('Processing Data')),

@@ -2,6 +2,7 @@ import 'package:crckclivestreamhelper/auth/secrets.dart';
 import 'package:googleapis/youtube/v3.dart';
 import 'streamdata.dart';
 import 'login.dart';
+import '../provider/debug.dart';
 // import 'dart:js' as js;
 
 class Youtube {
@@ -15,13 +16,6 @@ class Youtube {
 
   ///Output = [LivestreamControlURL, WhatsappMessage]
   static Future<List> scheduleStream() async {
-    // return [
-    //   "https://www.youtube.com/,
-    //   '''TestMessage
-    // Second Line
-    // 中文'''
-    // ];
-    // Map _data = {"ytControlUrl": Null, "message": Null};
     //Get Stream Time
     DateTime getStreamTime() {
       DateTime streamTime = DateTime.now();

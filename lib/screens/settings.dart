@@ -1,3 +1,4 @@
+import 'package:crckclivestreamhelper/provider/debug.dart';
 import 'package:crckclivestreamhelper/provider/google.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/chat/v1.dart';
@@ -21,6 +22,7 @@ class SettingsState extends State<Settings> {
     super.initState();
   }
 
+  ///Login Page body
   Widget _loginPage() {
     var user = GoogleAPI.currentUser;
     if (user != null) {
@@ -75,23 +77,65 @@ class SettingsState extends State<Settings> {
     }
   }
 
+  ///Open Signin Page and Contains Sign In Page Frame
   void goToSignInPage() {
-    // Here we are pushing the new view into the Navigator stack. By using a
-    // MaterialPageRoute we get standard behaviour of a Material app, which will
-    // show a back button automatically for each platform on the left top corner
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       void back() {
         Navigator.of(context).pop();
       }
 
+      //Signin Page Frame
       return Scaffold(
           appBar: AppBar(
-              leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => back(),
-          )),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => back(),
+            ),
+            title: const Text("Google Sign In"),
+            actions: [
+              context.watch<DebugController>().debug
+                  ? ElevatedButton(
+                      onPressed: () => context
+                          .read<GoogleProvider>()
+                          .setLoggedin(!context
+                              .read<GoogleProvider>()
+                              .loggedIn), // ignore: avoid_print
+                      child: const Text('DEBUG SIGNIN'),
+                    )
+                  : Container()
+            ],
+          ),
           body: Center(child: _loginPage()));
     }));
+  }
+
+  Widget _settingsBody() {
+    bool debugMode = context.watch<DebugController>().debug;
+    bool loggedIn = context.watch<GoogleProvider>().loggedIn;
+    return ConstrainedBox(
+      constraints: const BoxConstraints.expand(),
+      child: ListView(
+        children: [
+          ListTile(
+            onTap: () => goToSignInPage(),
+            title: const Center(child: Text("Sign In")),
+          ),
+          ListTile(
+            title: const Center(child: Text("Debug Mode")),
+            tileColor: debugMode ? Colors.green[300] : Colors.red[300],
+            trailing: Icon(
+                debugMode ? Icons.check_box : Icons.check_box_outline_blank),
+            onTap: () => context.read<DebugController>().setDebug(!debugMode),
+          ),
+          ListTile(
+            title: const Center(child: Text("Forced Signin")),
+            trailing: Icon(
+                loggedIn ? Icons.check_box : Icons.check_box_outline_blank),
+            onTap: () => context.read<GoogleProvider>().setLoggedin(!loggedIn),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -99,23 +143,9 @@ class SettingsState extends State<Settings> {
     // context.watch<GoogleProvider>().loggedIn;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Google Sign In'),
-        actions: [
-          ElevatedButton(
-            onPressed: () => context.read<GoogleProvider>().setLoggedin(!context
-                .read<GoogleProvider>()
-                .loggedIn), // ignore: avoid_print
-            child: const Text('DEBUG SIGNIN'),
-          ),
-        ],
+        title: const Text('Settings'),
       ),
-      body: ConstrainedBox(
-        constraints: const BoxConstraints.expand(),
-        child: ElevatedButton(
-          onPressed: () => goToSignInPage(),
-          child: Text("Sign In"),
-        ),
-      ),
+      body: _settingsBody(),
     );
   }
 }
