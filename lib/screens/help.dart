@@ -42,7 +42,7 @@ class _HelpPageState extends State<HelpPage> {
             Text("1step"),
             Text("2step"),
             Image.network(
-                "https://raw.githubusercontent.com/EricssonXD/CRCKC-Livestream-Helper/master/assets/thumbnailTemplate.JPG"),
+                "https://raw.githubusercontent.com/EricssonXD/CRCKC-Livestream-Helper/master/assets/thumbnailTemplate.jpeg"),
           ],
         ),
       ],

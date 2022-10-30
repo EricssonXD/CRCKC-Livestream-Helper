@@ -87,7 +87,11 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
                 confirmText
               ];
             } else {
-              data = await Youtube.scheduleStream();
+              try {
+                data = await Youtube.scheduleStream();
+              } catch (e) {
+                debugPrint("Failed To Schedule Stream");
+              }
             }
 
             if (data.isNotEmpty) {

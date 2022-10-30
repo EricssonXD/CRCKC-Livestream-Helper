@@ -24,8 +24,10 @@ class Youtube {
         streamTime = streamTime.add(const Duration(days: 1));
       }
 
-      streamTime = DateTime.parse(
-          "${streamTime.year}-${streamTime.month}-${streamTime.day} 11:00:00");
+      // streamTime = DateTime.parse(
+      //     "${streamTime.year}-${streamTime.month}-${streamTime.day} 11:00:00");
+      streamTime = DateTime(
+          streamTime.year, streamTime.month, streamTime.day, 11, 0, 0, 0, 0);
 
       if (streamTime.isAfter(DateTime.now())) {
         return streamTime;
@@ -34,15 +36,26 @@ class Youtube {
       }
     }
 
-    DateTime streamTime = getStreamTime();
-
+    String streamTitle = '';
+    try {
+      DateTime streamTime = getStreamTime();
+      List<String> data = await CrckcHelperAPI.get();
+      streamTitle =
+          "${streamTime.year}年${streamTime.month}月${streamTime.day}日 講員：${data[0]} / 講題：${data[1]} / 經文：${data[2]}";
+    } catch (e) {
+      print("not this");
+      streamTitle = "fail";
+    }
     //Get Stream Title
-    List<String> data = await CrckcHelperAPI.get();
-    String streamTitle =
-        "${streamTime.year}年${streamTime.month}月${streamTime.day}日 講員：${data[0]} / 講題：${data[1]} / 經文：${data[2]}";
 
+    print("start Trying");
     //Schedule Stream
     try {
+      DateTime streamTime = getStreamTime();
+      List<String> data = await CrckcHelperAPI.get();
+      streamTitle =
+          "${streamTime.year}年${streamTime.month}月${streamTime.day}日 講員：${data[0]} / 講題：${data[1]} / 經文：${data[2]}";
+
       var response = await _youtubeClient?.liveBroadcasts.insert(
         LiveBroadcast(
           snippet: LiveBroadcastSnippet(
@@ -50,10 +63,8 @@ class Youtube {
             title: streamTitle,
             thumbnails: ThumbnailDetails(
               default_: Thumbnail(
-                  height: 720,
-                  width: 1280,
                   url:
-                      "https://raw.githubusercontent.com/EricssonXD/CRCKC-Livestream-Helper/master/assets/thumbnailTemplate.JPG"),
+                      "https://raw.githubusercontent.com/EricssonXD/CRCKC-Livestream-Helper/master/assets/thumbnailTemplate.jpeg"),
             ),
           ),
           status: LiveBroadcastStatus(
