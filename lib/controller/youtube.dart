@@ -2,7 +2,7 @@ import 'package:crckclivestreamhelper/auth/secrets.dart';
 import 'package:googleapis/youtube/v3.dart';
 import 'streamdata.dart';
 import 'login.dart';
-import '../provider/debug.dart';
+// import '../provider/debug.dart';
 // import 'dart:js' as js;
 
 class Youtube {
@@ -48,13 +48,21 @@ class Youtube {
           snippet: LiveBroadcastSnippet(
             scheduledStartTime: streamTime,
             title: streamTitle,
+            thumbnails: ThumbnailDetails(
+              default_: Thumbnail(
+                  height: 720,
+                  width: 1280,
+                  url:
+                      "https://raw.githubusercontent.com/EricssonXD/CRCKC-Livestream-Helper/master/assets/thumbnailTemplate.JPG"),
+            ),
           ),
           status: LiveBroadcastStatus(
-            privacyStatus: "private",
+            privacyStatus: "public",
+            // privacyStatus: "private",
             selfDeclaredMadeForKids: false,
           ),
           contentDetails: LiveBroadcastContentDetails(
-            enableAutoStart: false,
+            enableAutoStart: true,
             enableAutoStop: true,
             monitorStream: MonitorStreamInfo(
               enableMonitorStream: true,

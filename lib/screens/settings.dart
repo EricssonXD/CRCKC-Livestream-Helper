@@ -1,9 +1,10 @@
+// import 'dart:html';
+
 import 'package:crckclivestreamhelper/provider/debug.dart';
 import 'package:crckclivestreamhelper/provider/google.dart';
 import 'package:flutter/material.dart';
-import 'package:googleapis/chat/v1.dart';
 import '../controller/login.dart';
-import '../controller/youtube.dart';
+// import '../controller/youtube.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class Settings extends StatefulWidget {
@@ -23,89 +24,12 @@ class SettingsState extends State<Settings> {
   }
 
   ///Login Page body
-  Widget _loginPage() {
-    var user = GoogleAPI.currentUser;
-    if (user != null) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          ListTile(
-            leading: GoogleUserCircleAvatar(
-              identity: user,
-            ),
-            title: Text(user.displayName ?? ''),
-            subtitle: Text(user.email),
-          ),
-          const Text('Signed in successfully.'),
-          ElevatedButton(
-            onPressed: () async {
-              await GoogleAPI.handleSignOut();
-              // ignore: use_build_context_synchronously
-              context.read<GoogleProvider>().setLoggedin(false);
-            },
-            child: const Text('SIGN OUT'),
-          ),
-          ElevatedButton(
-            onPressed: () => context.read<GoogleProvider>().setLoggedin(!context
-                .read<GoogleProvider>()
-                .loggedIn), // ignore: avoid_print
-            child: const Text('DEBUG SIGNIN'),
-          ),
-          // ElevatedButton(
-          //   onPressed: () => context.read<GoogleProvider>().setLoggedin(!context
-          //       .read<GoogleProvider>()
-          //       .loggedIn), // ignore: avoid_print
-          //   child: const Text('Test'),
-          // ),
-        ],
-      );
-    } else {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          const Text('You are not currently signed in.'),
-          ElevatedButton(
-            onPressed: () async {
-              bool success = await GoogleAPI.handleSignIn();
-              // ignore: use_build_context_synchronously
-              context.read<GoogleProvider>().setLoggedin(success);
-            },
-            child: const Text('SIGN IN'),
-          ),
-        ],
-      );
-    }
-  }
 
   ///Open Signin Page and Contains Sign In Page Frame
   void goToSignInPage() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      void back() {
-        Navigator.of(context).pop();
-      }
-
       //Signin Page Frame
-      return Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () => back(),
-            ),
-            title: const Text("Google Sign In"),
-            actions: [
-              context.watch<DebugController>().debug
-                  ? ElevatedButton(
-                      onPressed: () => context
-                          .read<GoogleProvider>()
-                          .setLoggedin(!context
-                              .read<GoogleProvider>()
-                              .loggedIn), // ignore: avoid_print
-                      child: const Text('DEBUG SIGNIN'),
-                    )
-                  : Container()
-            ],
-          ),
-          body: Center(child: _loginPage()));
+      return SigninPage();
     }));
   }
 
@@ -147,5 +71,121 @@ class SettingsState extends State<Settings> {
       ),
       body: _settingsBody(),
     );
+  }
+}
+
+class SigninPage extends StatefulWidget {
+  const SigninPage({
+    super.key,
+  });
+
+  @override
+  State<SigninPage> createState() => _SigninPageState();
+}
+
+class _SigninPageState extends State<SigninPage> {
+  late bool debugHover = false;
+
+  void back() {
+    Navigator.of(context).pop();
+  }
+
+  Widget _loginPage() {
+    var user = GoogleAPI.currentUser;
+    if (user != null) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          ListTile(
+            leading: GoogleUserCircleAvatar(
+              identity: user,
+            ),
+            title: Text(user.displayName ?? ''),
+            subtitle: Text(user.email),
+          ),
+          const Text('Signed in successfully.'),
+          ElevatedButton(
+            onPressed: () async {
+              await GoogleAPI.handleSignOut();
+              // ignore: use_build_context_synchronously
+              context.read<GoogleProvider>().setLoggedin(false);
+            },
+            child: const Text('SIGN OUT'),
+          ),
+          // ElevatedButton(
+          //   onPressed: () => context.read<GoogleProvider>().setLoggedin(!context
+          //       .read<GoogleProvider>()
+          //       .loggedIn), // ignore: avoid_print
+          //   child: const Text('DEBUG SIGNIN'),
+          // ),
+          // ElevatedButton(
+          //   onPressed: () => context.read<GoogleProvider>().setLoggedin(!context
+          //       .read<GoogleProvider>()
+          //       .loggedIn), // ignore: avoid_print
+          //   child: const Text('Test'),
+          // ),
+        ],
+      );
+    } else {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          const Text('You are not currently signed in.'),
+          ElevatedButton(
+            onPressed: () async {
+              bool success = await GoogleAPI.handleSignIn();
+              // ignore: use_build_context_synchronously
+              context.read<GoogleProvider>().setLoggedin(success);
+            },
+            child: const Text(
+              'SIGN IN',
+            ),
+          ),
+        ],
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => back(),
+          ),
+          title: const Text("Google Sign In"),
+          actions: [
+            context.watch<DebugController>().debug
+                ? FractionallySizedBox(
+                    heightFactor: 1,
+                    child: InkWell(
+                      onHover: (hovered) {
+                        setState(() {
+                          debugHover = hovered;
+                        });
+                      },
+                      onTap: () => context.read<GoogleProvider>().setLoggedin(
+                          !context
+                              .read<GoogleProvider>()
+                              .loggedIn), // ignore: avoid_print
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'DEBUG SIGNIN',
+                            style: TextStyle(
+                                color:
+                                    debugHover ? Colors.white70 : Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(),
+          ],
+        ),
+        body: Center(child: _loginPage()));
   }
 }

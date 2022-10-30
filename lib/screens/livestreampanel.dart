@@ -1,4 +1,4 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -6,9 +6,9 @@ import '../controller/streamdata.dart';
 import '../controller/youtube.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
-
+import "help.dart";
 import '../provider/debug.dart';
 import '../provider/global.dart';
 
@@ -22,18 +22,6 @@ class LiveStreamScreen extends StatefulWidget {
 class _LiveStreamScreenState extends State<LiveStreamScreen> {
   final _singleton = Singletons();
   final bool _useSelenium = true;
-
-  final textmessage = """2022年10月09日 禮中堂主日崇拜
-講員：姚澤煌牧師
-講題：朝聖之民心所向
-經文：詩篇84篇1至12節
-
-https://youtu.be/mR6OF3cNUF8
-
-(10:45am可以進入靜候11:00am崇拜開始)
-
-「主日崇拜網上出席表」連結（請以個人單位填寫）：
-https://forms.gle/95cuCRnGk2LdGJZ39 """;
 
   setClippboard(String text) async {
     try {
@@ -120,10 +108,39 @@ https://forms.gle/95cuCRnGk2LdGJZ39 """;
         );
       });
 
+  void goToHelpPage() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      //Signin Page Frame
+      return const HelpPage();
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Live Stream Control Panel")),
+      appBar: AppBar(
+        title: const Text("Live Stream Control Panel"),
+        actions: [
+          InkWell(
+            onTap: () => goToHelpPage(),
+            child: Row(
+              children: const [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.help_outline_sharp),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 8.0, right: 10.0, top: 8.0),
+                  child: Text(
+                    "Help",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
       body: Center(
         child: Column(
           children: [
