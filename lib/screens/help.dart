@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+// import 'package:http/http.dart' as http;
 
 class HelpPage extends StatefulWidget {
   const HelpPage({super.key});
@@ -14,7 +15,7 @@ class _HelpPageState extends State<HelpPage> {
 
   Widget body() {
     return ListView(
-      children: [
+      children: const [
         ExpansionTile(
           title: Text("Setup Youtube Stream and Send Whatsapp"),
           children: [
@@ -41,8 +42,7 @@ class _HelpPageState extends State<HelpPage> {
           children: [
             Text("1step"),
             Text("2step"),
-            Image.network(
-                "https://raw.githubusercontent.com/EricssonXD/CRCKC-Livestream-Helper/master/assets/thumbnailTemplate.jpeg"),
+            TestWidget(),
           ],
         ),
       ],
@@ -60,5 +60,71 @@ class _HelpPageState extends State<HelpPage> {
       ),
       body: body(),
     );
+  }
+}
+
+class HelpPageWidget extends StatelessWidget {
+  const HelpPageWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    void goToHelpPage() {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        //Signin Page Frame
+        return const HelpPage();
+      }));
+    }
+
+    return InkWell(
+      onTap: () => goToHelpPage(),
+      child: Row(
+        children: const [
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Icon(Icons.help_outline_sharp),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 8.0, right: 10.0, top: 8.0),
+            child: Text(
+              "Help",
+              style: TextStyle(color: Colors.white),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class TestWidget extends StatefulWidget {
+  const TestWidget({super.key});
+
+  @override
+  State<TestWidget> createState() => _TestWidgetState();
+}
+
+class _TestWidgetState extends State<TestWidget> {
+  Widget display = const Text("Loading");
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  init() async {
+    var widget = const Text("Nothing");
+    // Widget Changing Code Start
+
+    // Widget Changing Code End
+
+    setState(() {
+      display = widget;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return display;
   }
 }

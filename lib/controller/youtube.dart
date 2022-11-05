@@ -1,7 +1,10 @@
 import 'package:crckclivestreamhelper/auth/secrets.dart';
+import 'package:flutter/services.dart';
 import 'package:googleapis/youtube/v3.dart';
 import 'streamdata.dart';
 import 'login.dart';
+import 'package:http/http.dart' as http;
+
 // import '../provider/debug.dart';
 // import 'dart:js' as js;
 
@@ -36,36 +39,31 @@ class Youtube {
       }
     }
 
-    String streamTitle = '';
-    try {
-      DateTime streamTime = getStreamTime();
-      List<String> data = await CrckcHelperAPI.get();
-      streamTitle =
-          "${streamTime.year}年${streamTime.month}月${streamTime.day}日 講員：${data[0]} / 講題：${data[1]} / 經文：${data[2]}";
-    } catch (e) {
-      print("not this");
-      streamTitle = "fail";
-    }
-    //Get Stream Title
+    String dateTimetoTitleString(DateTime d) {
+      String prefix0(int n) {
+        if (n < 10) {
+          return "0$n";
+        }
+        return "$n";
+      }
 
-    print("start Trying");
+      return "${d.year}年${prefix0(d.month)}月${prefix0(d.day)}日";
+    }
+
+    //Get Stream Title
     //Schedule Stream
     try {
       DateTime streamTime = getStreamTime();
+
       List<String> data = await CrckcHelperAPI.get();
-      streamTitle =
-          "${streamTime.year}年${streamTime.month}月${streamTime.day}日 講員：${data[0]} / 講題：${data[1]} / 經文：${data[2]}";
+      String streamTitle =
+          "${dateTimetoTitleString(streamTime)} 講員：${data[0]} / 講題：${data[1]} / 經文：${data[2]}";
 
       var response = await _youtubeClient?.liveBroadcasts.insert(
         LiveBroadcast(
           snippet: LiveBroadcastSnippet(
             scheduledStartTime: streamTime,
             title: streamTitle,
-            thumbnails: ThumbnailDetails(
-              default_: Thumbnail(
-                  url:
-                      "https://raw.githubusercontent.com/EricssonXD/CRCKC-Livestream-Helper/master/assets/thumbnailTemplate.jpeg"),
-            ),
           ),
           status: LiveBroadcastStatus(
             privacyStatus: "public",
@@ -73,7 +71,7 @@ class Youtube {
             selfDeclaredMadeForKids: false,
           ),
           contentDetails: LiveBroadcastContentDetails(
-            enableAutoStart: true,
+            enableAutoStart: false,
             enableAutoStop: true,
             monitorStream: MonitorStreamInfo(
               enableMonitorStream: true,
@@ -85,15 +83,40 @@ class Youtube {
         ["snippet", "contentDetails", "status"],
       );
 
+      if (response == null) return [];
+
+      String id = response.id ?? "";
+
+      getThumbnailBytes() async {
+        var response = await http.get(
+          Uri.http('localhost:2339', "thumbnailgen"),
+        );
+        return response.bodyBytes;
+      }
+
+      getBitStream() async {
+        try {
+          return await getThumbnailBytes();
+        } catch (e) {
+          return (await rootBundle.load("assets/thumbnailTemplate.jpeg"))
+              .buffer
+              .asUint8List();
+        }
+      }
+
+      var bitStream = List<int>.from(await getBitStream());
+
+      _youtubeClient!.thumbnails.set(id,
+          uploadMedia: Media(Stream.value(bitStream), bitStream.length));
+
       // print("end");
       // print(response?.toJson());
-      String ytlink = "https://youtu.be/${response?.id}";
+      String ytlink = "https://youtu.be/${response.id}";
       String liveStreamUrl =
-          "https://studio.youtube.com/video/${response?.id}/livestreaming";
+          "https://studio.youtube.com/video/${response.id}/livestreaming";
       // js.context.callMethod('open', [liveStreamUrl, '_blank']);
       // _data["ytControlUrl"] = liveStreamUrl;
-      String whatsappMessage =
-          '''${streamTime.year}年${streamTime.month}月${streamTime.day}日 禮中堂主日崇拜
+      String whatsappMessage = '''${dateTimetoTitleString(streamTime)} 禮中堂主日崇拜
 講員：${data[0]}
 講題：${data[1]}
 經文：${data[2]}

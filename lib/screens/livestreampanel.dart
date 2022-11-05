@@ -6,7 +6,6 @@ import '../controller/streamdata.dart';
 import '../controller/youtube.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-// import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import "help.dart";
 import '../provider/debug.dart';
@@ -27,7 +26,7 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
     try {
       await Clipboard.setData(ClipboardData(text: text));
     } catch (e) {
-      print(e);
+      // print(e);
     }
   }
 
@@ -55,10 +54,13 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
           'message': text,
         }),
       );
-      print("Yo: ${response.body}");
+      // print("Yo: ${response.body}");
       webLink = response.body;
+      if (response.statusCode == 500) {
+        assert(false);
+      }
     } catch (e) {
-      print(e);
+      // print(e);
       launchUrlString("https://web.whatsapp.com");
     }
 

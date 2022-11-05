@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../controller/login.dart';
 // import '../controller/youtube.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'help.dart';
 
 class Settings extends StatefulWidget {
   /// Creates the main widget of this demo.
@@ -29,7 +30,7 @@ class SettingsState extends State<Settings> {
   void goToSignInPage() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       //Signin Page Frame
-      return SigninPage();
+      return const SigninPage();
     }));
   }
 
@@ -68,6 +69,9 @@ class SettingsState extends State<Settings> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
+        actions: const [
+          HelpPageWidget(),
+        ],
       ),
       body: _settingsBody(),
     );
@@ -112,18 +116,6 @@ class _SigninPageState extends State<SigninPage> {
             },
             child: const Text('SIGN OUT'),
           ),
-          // ElevatedButton(
-          //   onPressed: () => context.read<GoogleProvider>().setLoggedin(!context
-          //       .read<GoogleProvider>()
-          //       .loggedIn), // ignore: avoid_print
-          //   child: const Text('DEBUG SIGNIN'),
-          // ),
-          // ElevatedButton(
-          //   onPressed: () => context.read<GoogleProvider>().setLoggedin(!context
-          //       .read<GoogleProvider>()
-          //       .loggedIn), // ignore: avoid_print
-          //   child: const Text('Test'),
-          // ),
         ],
       );
     } else {
