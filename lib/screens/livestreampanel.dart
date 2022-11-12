@@ -44,7 +44,7 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
 
     try {
       var response = await http.post(
-        Uri.http('localhost:2339', automationMode),
+        Uri.http('127.0.0.1:2339', automationMode),
         headers: {
           'Content-Type': 'application/json',
           "Access-Control-Allow-Origin": "*"
@@ -167,12 +167,21 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
             ),
             Text(_singleton.message),
             ElevatedButton(
-                onPressed: () async {
-                  await Clipboard.setData(
-                      ClipboardData(text: _singleton.message));
-                  // copied successfully
-                },
-                child: const Text("Copy Message")),
+              onPressed: () async {
+                await Clipboard.setData(
+                    ClipboardData(text: _singleton.message));
+                // copied successfully
+              },
+              child: const Text("Copy Message"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await http.get(
+                  Uri.http('127.0.0.1:2339', "start/obs"),
+                );
+              },
+              child: const Text("Start OBS"),
+            ),
             DebugSingleton().debug
                 ? ElevatedButton(
                     onPressed: () =>

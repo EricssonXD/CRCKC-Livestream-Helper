@@ -87,21 +87,20 @@ class Youtube {
 
       String id = response.id ?? "";
 
-      getThumbnailBytes() async {
-        var response = await http.get(
-          Uri.http('localhost:2339', "thumbnailgen"),
-        );
-        return response.bodyBytes;
-      }
-
       getBitStream() async {
         try {
-          return await getThumbnailBytes();
-        } catch (e) {
-          return (await rootBundle.load("assets/thumbnailTemplate.jpeg"))
-              .buffer
-              .asUint8List();
-        }
+          var response = await http.get(
+            Uri.http('localhost:2339', "thumbnailgen"),
+          );
+          if (response.statusCode == 200) {
+            return response.bodyBytes;
+          } else {
+            assert(false);
+          }
+        } finally {}
+        return (await rootBundle.load("assets/thumbnailTemplate.jpeg"))
+            .buffer
+            .asUint8List();
       }
 
       var bitStream = List<int>.from(await getBitStream());
