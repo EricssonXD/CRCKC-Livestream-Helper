@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import "help.dart";
-import '../provider/debug.dart';
+import '../provider/options.dart';
 import '../provider/global.dart';
 
 class LiveStreamScreen extends StatefulWidget {
@@ -83,7 +83,7 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
           Navigator.of(context).pop();
           List data = [];
           if (confirm) {
-            if (DebugSingleton().debug) {
+            if (OptionSingleton().debug) {
               data = [
                 "https://studio.youtube.com/channel/1/livestreaming",
                 confirmText
@@ -149,6 +149,7 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -182,7 +183,7 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
               },
               child: const Text("Start OBS"),
             ),
-            DebugSingleton().debug
+            OptionSingleton().debug
                 ? ElevatedButton(
                     onPressed: () =>
                         callLocalFlask("yo", useSelenium: _useSelenium),

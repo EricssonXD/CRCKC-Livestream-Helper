@@ -4,6 +4,7 @@ import 'package:googleapis/youtube/v3.dart';
 import 'streamdata.dart';
 import 'login.dart';
 import 'package:http/http.dart' as http;
+import 'package:crckclivestreamhelper/provider/options.dart';
 
 // import '../provider/debug.dart';
 // import 'dart:js' as js;
@@ -71,7 +72,7 @@ class Youtube {
             selfDeclaredMadeForKids: false,
           ),
           contentDetails: LiveBroadcastContentDetails(
-            enableAutoStart: false,
+            enableAutoStart: OptionSingleton().autoStart,
             enableAutoStop: true,
             monitorStream: MonitorStreamInfo(
               enableMonitorStream: true,

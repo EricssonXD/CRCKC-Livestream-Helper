@@ -1,3 +1,4 @@
+import "package:crckclivestreamhelper/provider/options.dart";
 import "package:flutter/material.dart";
 // import 'package:http/http.dart' as http;
 
@@ -125,6 +126,17 @@ class _TestWidgetState extends State<TestWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return display;
+    // return display;
+    return OptionSingleton().debug
+        ? Column(
+            children: [
+              Text(OptionSingleton().debug.toString()),
+              TextButton(
+                  onPressed: () =>
+                      OptionSingleton().debug = !OptionSingleton().debug,
+                  child: Text("ChangeSingleton"))
+            ],
+          )
+        : Container();
   }
 }

@@ -1,6 +1,6 @@
 // import 'package:crckclivestreamhelper/model/streamdatamodel.dart';
 
-import 'package:crckclivestreamhelper/provider/debug.dart';
+import 'package:crckclivestreamhelper/provider/options.dart';
 
 import '../controller/streamdata.dart';
 import 'package:flutter/material.dart';
@@ -118,7 +118,7 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
               TextButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate() ||
-                        DebugSingleton().debug) {
+                        OptionSingleton().debug) {
                       _submitForm();
                       // ScaffoldMessenger.of(context).showSnackBar(
                       //   const SnackBar(content: Text('Processing Data')),

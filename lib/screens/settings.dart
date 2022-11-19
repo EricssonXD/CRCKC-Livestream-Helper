@@ -2,6 +2,7 @@
 
 import 'package:crckclivestreamhelper/provider/debug.dart';
 import 'package:crckclivestreamhelper/provider/google.dart';
+import 'package:crckclivestreamhelper/provider/options.dart';
 import 'package:flutter/material.dart';
 import '../controller/login.dart';
 // import '../controller/youtube.dart';
@@ -35,8 +36,8 @@ class SettingsState extends State<Settings> {
   }
 
   Widget _settingsBody() {
-    bool debugMode = context.watch<DebugController>().debug;
     bool loggedIn = context.watch<GoogleProvider>().loggedIn;
+    OptionSingleton options = context.watch<Options>().options;
     return ConstrainedBox(
       constraints: const BoxConstraints.expand(),
       child: ListView(
@@ -46,18 +47,40 @@ class SettingsState extends State<Settings> {
             title: const Center(child: Text("Sign In")),
           ),
           ListTile(
-            title: const Center(child: Text("Debug Mode")),
-            tileColor: debugMode ? Colors.green[300] : Colors.red[300],
-            trailing: Icon(
-                debugMode ? Icons.check_box : Icons.check_box_outline_blank),
-            onTap: () => context.read<DebugController>().setDebug(!debugMode),
+            title: const Center(child: Text("YT AutoStart")),
+            trailing: Icon(options.autoStart
+                ? Icons.check_box
+                : Icons.check_box_outline_blank),
+            onTap: () =>
+                context.read<Options>().edit(autoStart: !options.autoStart),
           ),
           ListTile(
-            title: const Center(child: Text("Forced Signin")),
-            trailing: Icon(
-                loggedIn ? Icons.check_box : Icons.check_box_outline_blank),
-            onTap: () => context.read<GoogleProvider>().setLoggedin(!loggedIn),
+            title: const Center(child: Text("Debug Mode")),
+            tileColor: options.debug ? Colors.green[300] : Colors.red[300],
+            trailing: Icon(options.debug
+                ? Icons.check_box
+                : Icons.check_box_outline_blank),
+            onTap: () async {
+              if (options.debug == false) {
+                // ignore: use_build_context_synchronously
+                if (await _debugPasswordConfirmation(context) != true) {
+                  return;
+                }
+              }
+              // ignore: use_build_context_synchronously
+              context.read<Options>().edit(debug: !options.debug);
+            },
           ),
+          options.debug
+              ? ListTile(
+                  title: const Center(child: Text("Forced Signin")),
+                  trailing: Icon(loggedIn
+                      ? Icons.check_box
+                      : Icons.check_box_outline_blank),
+                  onTap: () =>
+                      context.read<GoogleProvider>().setLoggedin(!loggedIn),
+                )
+              : Container(),
         ],
       ),
     );
@@ -140,6 +163,7 @@ class _SigninPageState extends State<SigninPage> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<GoogleProvider>().loggedIn;
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -148,7 +172,7 @@ class _SigninPageState extends State<SigninPage> {
           ),
           title: const Text("Google Sign In"),
           actions: [
-            context.watch<DebugController>().debug
+            context.watch<Options>().options.debug
                 ? FractionallySizedBox(
                     heightFactor: 1,
                     child: InkWell(
@@ -181,3 +205,49 @@ class _SigninPageState extends State<SigninPage> {
         body: Center(child: _loginPage()));
   }
 }
+
+Future<bool?> _debugPasswordConfirmation(context) => showDialog<bool>(
+    context: context,
+    builder: (context) {
+      final formkey = GlobalKey<FormState>();
+      final focusNode = FocusNode();
+
+      submit() {
+        if (formkey.currentState!.validate()) {
+          Navigator.of(context).pop(true);
+        } else {
+          focusNode.requestFocus();
+        }
+      }
+
+      return AlertDialog(
+        title: const Text("Enter Debug Mode?"),
+        content: Form(
+          key: formkey,
+          child: TextFormField(
+            obscureText: true,
+            obscuringCharacter: "*",
+            focusNode: focusNode,
+            autofocus: true,
+            onFieldSubmitted: (value) => submit(),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter some text';
+              }
+              if (value == "debug") {
+                "lol you're so smart you found the password that i didnt even try to hide";
+                return null;
+              } else {
+                return "Nah";
+              }
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => submit(),
+            child: const Text("Confirm"),
+          ),
+        ],
+      );
+    });

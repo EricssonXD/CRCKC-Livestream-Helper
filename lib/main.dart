@@ -1,10 +1,11 @@
 // import 'package:crckclivestreamhelper/controller/youtube.dart';
 import 'package:crckclivestreamhelper/controller/login.dart';
+import 'package:crckclivestreamhelper/provider/options.dart';
 import 'package:flutter/material.dart';
 import 'screens/index.dart';
 import 'controller/streamdata.dart';
 import 'provider/google.dart';
-import 'provider/debug.dart';
+// import 'provider/debug.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +14,8 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => GoogleProvider()),
-      ChangeNotifierProvider(create: (_) => DebugController()),
+      // ChangeNotifierProvider(create: (_) => DebugController()),
+      ChangeNotifierProvider(create: (_) => Options()),
     ],
     child: const MyApp(),
   ));
