@@ -59,6 +59,7 @@ class Youtube {
       List<String> data = await CrckcHelperAPI.get();
       String streamTitle =
           "${dateTimetoTitleString(streamTime)} 講員：${data[0]} / 講題：${data[1]} / 經文：${data[2]}";
+      bool autoStart = OptionSingleton().autoStart;
 
       var response = await _youtubeClient?.liveBroadcasts.insert(
         LiveBroadcast(
@@ -72,7 +73,7 @@ class Youtube {
             selfDeclaredMadeForKids: false,
           ),
           contentDetails: LiveBroadcastContentDetails(
-            enableAutoStart: OptionSingleton().autoStart,
+            enableAutoStart: autoStart,
             enableAutoStop: true,
             monitorStream: MonitorStreamInfo(
               enableMonitorStream: true,

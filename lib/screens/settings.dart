@@ -1,6 +1,5 @@
 // import 'dart:html';
 
-import 'package:crckclivestreamhelper/provider/debug.dart';
 import 'package:crckclivestreamhelper/provider/google.dart';
 import 'package:crckclivestreamhelper/provider/options.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +47,7 @@ class SettingsState extends State<Settings> {
           ),
           ListTile(
             title: const Center(child: Text("YT AutoStart")),
-            trailing: Icon(options.autoStart
+            trailing: Icon(OptionSingleton().autoStart
                 ? Icons.check_box
                 : Icons.check_box_outline_blank),
             onTap: () =>
