@@ -20,30 +20,38 @@ class _HelpPageState extends State<HelpPage> {
         ExpansionTile(
           title: Text("Setup Youtube Stream and Send Whatsapp"),
           children: [
-            Text("1step"),
-            Text("2step"),
+            Text("1) Press the Schedule Stream Button"),
+            Text(
+                "2) Check to see if the informations are correct, then press confirm"),
+            Text("3) It should auto send the Whatsapp Message with the Helper"),
+            Text(
+                "4) If it cannot send the message, press copy message and send the message yourself with WhatsappWeb"),
           ],
         ),
         ExpansionTile(
           title: Text("Setup Camera and Other Equipments"),
           children: [
-            Text("1step"),
-            Text("2step"),
+            Text(
+                "1) Setup The camera, plug in the audio wire, laptop charger, stream deck controller"),
+            Text(""),
           ],
         ),
         ExpansionTile(
           title: Text("Start OBS and Edit Camera Positions"),
           children: [
-            Text("1step"),
-            Text("2step"),
+            Text("1) Ensure the camera is conneted, and open OBS"),
+            Text(
+                "2) In OBS, go to PPT Big, and change the camera positions accordingly"),
           ],
         ),
         ExpansionTile(
           title: Text("Setup Discord and Start Stream"),
           children: [
-            Text("1step"),
-            Text("2step"),
-            TestWidget(),
+            Text("1) Start discord"),
+            Text("2) Start the call and open the shared screen"),
+            Text(
+                "3) Press popout and fullscreen, then use Alt-Tab to switch back to OBS"),
+            // TestWidget(),
           ],
         ),
       ],
@@ -134,7 +142,7 @@ class _TestWidgetState extends State<TestWidget> {
               TextButton(
                   onPressed: () =>
                       OptionSingleton().debug = !OptionSingleton().debug,
-                  child: Text("ChangeSingleton"))
+                  child: const Text("ChangeSingleton"))
             ],
           )
         : Container();
