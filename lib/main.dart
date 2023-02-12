@@ -11,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GoogleAPI.init();
   await CrckcHelperAPI.init();
+  OptionSingleton();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => GoogleProvider()),
