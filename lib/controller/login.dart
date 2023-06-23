@@ -56,6 +56,7 @@ class GoogleAPI {
     }).catchError((err) {
       // ignore: avoid_print
       print("cannot auto signin");
+      return false;
     });
 
     popup
@@ -64,6 +65,7 @@ class GoogleAPI {
           }).catchError((err) {
             // ignore: avoid_print
             print('error occured $err');
+            return false;
           })
         : null;
 

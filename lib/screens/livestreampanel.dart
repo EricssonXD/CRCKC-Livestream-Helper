@@ -72,8 +72,9 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
     List<String> data = await CrckcHelperAPI.get();
     //Remove the a" in the back
     DateTime t = DateTime.parse(data[3].substring(0, data[3].length - 1));
+
     // DateTime updateTime = DateTime.parse(data[3]);
-    return "Use The Following Data?\n\n講員: ${data[0]}\n講題: ${data[1]}\n經文: ${data[2]}\n\nData Updated On:\n${t.day}/${t.month} - ${t.hour}:${t.minute}";
+    return "Use The Following Data?\n\n講員: ${data[0]}\n講題: ${data[1]}\n經文: ${data[2]}\n\nData Updated On:\n${t.day}/${t.month} - ${t.hour}:${t.minute}\n${DateTime.now().difference(t) < const Duration(days: 6) ? "Data Up To Date" : "Data Might be Outdated"}";
   }
 
   Future _confirmSchedule(confirmText) => showDialog(
@@ -129,8 +130,8 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
         actions: [
           InkWell(
             onTap: () => goToHelpPage(),
-            child: Row(
-              children: const [
+            child: const Row(
+              children: [
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Icon(Icons.help_outline_sharp),
