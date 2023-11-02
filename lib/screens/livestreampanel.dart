@@ -73,7 +73,13 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
     //Remove the a" in the back
     DateTime t = DateTime.parse(data[3].substring(0, data[3].length - 1));
     // DateTime updateTime = DateTime.parse(data[3]);
-    return "Use The Following Data?\n\n講員: ${data[0]}\n講題: ${data[1]}\n經文: ${data[2]}\n\nData Updated On:\n${t.day}/${t.month} - ${t.hour}:${t.minute}";
+    String confirmation;
+    if (DateTime.now().difference(t) < const Duration(days: 7)) {
+      confirmation = "\nData should be up to date";
+    } else {
+      confirmation = "\nData might be outdated";
+    }
+    return "Use The Following Data?\n\n講員: ${data[0]}\n講題: ${data[1]}\n經文: ${data[2]}\n\nData Updated On:\n${t.day}/${t.month} - ${t.hour}:${t.minute}$confirmation";
   }
 
   Future _confirmSchedule(confirmText) => showDialog(

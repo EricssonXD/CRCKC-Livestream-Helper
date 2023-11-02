@@ -46,7 +46,7 @@ class Options with ChangeNotifier {
 class OptionSingleton {
   static final OptionSingleton _optionsingleton = OptionSingleton._internal();
   bool debug = false;
-  bool autoStart = false;
+  bool autoStart = true;
 
   static const String keydebug = 'debug';
   static const String keyautoStart = 'autoStart';
