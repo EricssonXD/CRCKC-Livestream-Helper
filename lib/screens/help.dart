@@ -86,8 +86,8 @@ class HelpPageWidget extends StatelessWidget {
 
     return InkWell(
       onTap: () => goToHelpPage(),
-      child: Row(
-        children: const [
+      child: const Row(
+        children: [
           Padding(
             padding: EdgeInsets.all(8.0),
             child: Icon(Icons.help_outline_sharp),

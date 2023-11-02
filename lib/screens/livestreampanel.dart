@@ -72,6 +72,7 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
     List<String> data = await CrckcHelperAPI.get();
     //Remove the a" in the back
     DateTime t = DateTime.parse(data[3].substring(0, data[3].length - 1));
+
     // DateTime updateTime = DateTime.parse(data[3]);
     String confirmation;
     if (DateTime.now().difference(t) < const Duration(days: 7)) {
@@ -135,8 +136,8 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
         actions: [
           InkWell(
             onTap: () => goToHelpPage(),
-            child: Row(
-              children: const [
+            child: const Row(
+              children: [
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Icon(Icons.help_outline_sharp),
