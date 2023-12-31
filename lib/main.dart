@@ -120,7 +120,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    bool loggedIn = context.watch<GoogleProvider>().loggedIn;
-    return loggedIn ? livestreamBody() : defaultbody();
+    // bool loggedIn = context.watch<GoogleProvider>().loggedIn;
+    return livestreamBody();
   }
 }

@@ -1,6 +1,9 @@
 // import 'dart:io';
 
+import 'package:crckclivestreamhelper/controller/login.dart';
+import 'package:crckclivestreamhelper/provider/google.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/widgets.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../controller/streamdata.dart';
 import '../controller/youtube.dart';
@@ -130,7 +133,9 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    bool loggedIn = context.watch<GoogleProvider>().loggedIn;
+
+    Widget livestreamPannel = Scaffold(
       appBar: AppBar(
         title: const Text("Live Stream Control Panel"),
         actions: [
@@ -201,5 +206,66 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
         ),
       ),
     );
+    return loggedIn ? livestreamPannel : const _SigninPage();
+  }
+}
+
+class _SigninPage extends StatefulWidget {
+  const _SigninPage({super.key});
+
+  @override
+  State<_SigninPage> createState() => _SigninPageState();
+}
+
+class _SigninPageState extends State<_SigninPage> {
+  late bool debugHover = false;
+
+  void back() {
+    Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var user = GoogleAPI.currentUser;
+    if (user != null) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          ListTile(
+            leading: GoogleUserCircleAvatar(
+              identity: user,
+            ),
+            title: Text(user.displayName ?? ''),
+            subtitle: Text(user.email),
+          ),
+          const Text('Signed in successfully.'),
+          ElevatedButton(
+            onPressed: () async {
+              await GoogleAPI.handleSignOut();
+              // ignore: use_build_context_synchronously
+              context.read<GoogleProvider>().setLoggedin(false);
+            },
+            child: const Text('SIGN OUT'),
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          const Text('You are not currently signed in.'),
+          ElevatedButton(
+            onPressed: () async {
+              bool success = await GoogleAPI.handleSignIn();
+              // ignore: use_build_context_synchronously
+              context.read<GoogleProvider>().setLoggedin(success);
+            },
+            child: const Text(
+              'SIGN IN',
+            ),
+          ),
+        ],
+      );
+    }
   }
 }
