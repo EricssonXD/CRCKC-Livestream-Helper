@@ -1,10 +1,16 @@
-FROM dart
+FROM debian:bookworm
 
-RUN apt-get update
-RUN apt-get install -y curl git unzip xz-utils zip libglu1-mesa
+RUN apt-get update && apt-get -y install git curl unzip
 
-RUN apt-get clean
+RUN apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/flutter/flutter.git -b stable --depth 1 /flutter
-ENV PATH="/flutter/bin:$PATH"
-RUN flutter doctor
+RUN mkdir /home/codespace
+WORKDIR /home/codespace
+
+ENV PUB_CACHE=/home/codespace/.pub_cache
+ENV PATH="/home/codespace/flutter/bin:$PATH"
+
+RUN git clone https://github.com/flutter/flutter && \
+    /home/codespace/flutter/bin/flutter config --enable-web
