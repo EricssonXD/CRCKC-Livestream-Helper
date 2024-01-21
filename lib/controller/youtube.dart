@@ -88,27 +88,7 @@ class Youtube {
       if (response == null) return [];
 
       String id = response.id ?? "";
-
-      getBitStream() async {
-        try {
-          var response = await http.get(
-            Uri.http('localhost:2339', "thumbnailgen"),
-          );
-          if (response.statusCode == 200) {
-            return response.bodyBytes;
-          } else {
-            assert(false);
-          }
-        } finally {}
-        return (await rootBundle.load("assets/thumbnailTemplate.jpeg"))
-            .buffer
-            .asUint8List();
-      }
-
-      var bitStream = List<int>.from(await getBitStream());
-
-      _youtubeClient!.thumbnails.set(id,
-          uploadMedia: Media(Stream.value(bitStream), bitStream.length));
+      setThumbnail(id);
 
       // print("end");
       // print(response?.toJson());
@@ -135,5 +115,28 @@ ${SECRETS.churchForm} ''';
       print("Error Occured:\n$e");
       return [];
     }
+  }
+
+  static void setThumbnail(String videoId) async {
+    getBitStream() async {
+      try {
+        var response = await http.get(
+          Uri.http('localhost:2339', "thumbnailgen"),
+        );
+        if (response.statusCode == 200) {
+          return response.bodyBytes;
+        } else {
+          assert(false);
+        }
+      } finally {}
+      return (await rootBundle.load("assets/thumbnailTemplate.jpeg"))
+          .buffer
+          .asUint8List();
+    }
+
+    var bitStream = List<int>.from(await getBitStream());
+
+    _youtubeClient!.thumbnails.set(videoId,
+        uploadMedia: Media(Stream.value(bitStream), bitStream.length));
   }
 }

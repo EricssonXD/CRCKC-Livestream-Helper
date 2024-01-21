@@ -45,6 +45,18 @@
         "-d",
         "emulator-5554",
       ]
-    }
+    },
+    {
+			"name": "Flutter Codespace",
+			"request": "launch",
+			"type": "dart",
+			"program": "lib/main.dart",
+			"args": [
+				"--web-hostname",
+				"any",
+        "--web-port",
+        "3000"
+			]
+		}
   ]
 }
