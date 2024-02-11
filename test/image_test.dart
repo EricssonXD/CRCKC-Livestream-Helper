@@ -10,7 +10,7 @@ void main() {
     final image =
         img.decodeJpg(File('assets/thumbnailTemplate.jpeg').readAsBytesSync())!;
 
-    img.drawString(image, '2024-02-11', font: font, x: 10, y: 100);
+    img.drawString(image, '2024-02-20', font: font, x: 500, y: 100);
     await img.encodePngFile('testFont.png', image);
   });
 }

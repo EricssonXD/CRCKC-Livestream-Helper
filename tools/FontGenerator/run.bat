@@ -1,1 +1,1 @@
-fontbm\fontbm --output output/myFont --font-size 120 --font-file source/Roboto-Regular.ttf --data-format xml
+fontbm\fontbm --output output/myFont --font-size 120 --font-file source/Roboto-Regular.ttf --data-format xml --color 255,255,255
