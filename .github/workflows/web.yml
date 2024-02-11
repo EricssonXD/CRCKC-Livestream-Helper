@@ -16,3 +16,5 @@ jobs:
       - uses: bluefireteam/flutter-gh-pages@v7
         with:
           baseHref: /CRCKC-Livestream-Helper/
+          webRenderer: html
+
