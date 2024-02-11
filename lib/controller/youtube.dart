@@ -3,8 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:googleapis/youtube/v3.dart';
 import 'streamdata.dart';
 import 'login.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 import 'package:crckclivestreamhelper/provider/options.dart';
+import 'package:image/image.dart' as img;
 
 // import '../provider/debug.dart';
 // import 'dart:js' as js;
@@ -18,43 +19,43 @@ class Youtube {
     _youtubeClient = YouTubeApi(GoogleAPI.httpClient);
   }
 
-  ///Output = [LivestreamControlURL, WhatsappMessage]
-  static Future<List> scheduleStream() async {
-    //Get Stream Time
-    DateTime getStreamTime() {
-      DateTime streamTime = DateTime.now();
+  //Get Stream Time
+  static DateTime _getStreamTime() {
+    DateTime streamTime = DateTime.now();
 
-      while (streamTime.weekday != DateTime.sunday) {
-        streamTime = streamTime.add(const Duration(days: 1));
-      }
-
-      // streamTime = DateTime.parse(
-      //     "${streamTime.year}-${streamTime.month}-${streamTime.day} 11:00:00");
-      streamTime = DateTime(
-          streamTime.year, streamTime.month, streamTime.day, 11, 0, 0, 0, 0);
-
-      if (streamTime.isAfter(DateTime.now())) {
-        return streamTime;
-      } else {
-        return DateTime.now().add(const Duration(minutes: 5));
-      }
+    while (streamTime.weekday != DateTime.sunday) {
+      streamTime = streamTime.add(const Duration(days: 1));
     }
 
-    String dateTimetoTitleString(DateTime d) {
-      String prefix0(int n) {
-        if (n < 10) {
-          return "0$n";
-        }
-        return "$n";
-      }
+    // streamTime = DateTime.parse(
+    //     "${streamTime.year}-${streamTime.month}-${streamTime.day} 11:00:00");
+    streamTime = DateTime(
+        streamTime.year, streamTime.month, streamTime.day, 11, 0, 0, 0, 0);
 
-      return "${d.year}年${prefix0(d.month)}月${prefix0(d.day)}日";
+    if (streamTime.isAfter(DateTime.now())) {
+      return streamTime;
+    } else {
+      return DateTime.now().add(const Duration(minutes: 5));
+    }
+  }
+
+  static String _prefix0(int n) {
+    if (n < 10) {
+      return "0$n";
+    }
+    return "$n";
+  }
+
+  ///Output = [LivestreamControlURL, WhatsappMessage]
+  static Future<List> scheduleStream() async {
+    String dateTimetoTitleString(DateTime d) {
+      return "${d.year}年${_prefix0(d.month)}月${_prefix0(d.day)}日";
     }
 
     //Get Stream Title
     //Schedule Stream
     try {
-      DateTime streamTime = getStreamTime();
+      DateTime streamTime = _getStreamTime();
 
       List<String> data = await CrckcHelperAPI.get();
       String streamTitle =
@@ -117,24 +118,34 @@ ${SECRETS.churchForm} ''';
     }
   }
 
-  static void setThumbnail(String videoId) async {
-    getBitStream() async {
-      try {
-        var response = await http.get(
-          Uri.http('localhost:2339', "thumbnailgen"),
-        );
-        if (response.statusCode == 200) {
-          return response.bodyBytes;
-        } else {
-          assert(false);
-        }
-      } finally {}
-      return (await rootBundle.load("assets/thumbnailTemplate.jpeg"))
-          .buffer
-          .asUint8List();
-    }
+  static Future<Uint8List> getThumbnail() async {
+    final fontZipFile = await rootBundle.load('assets/fonts/CRCKCFont.zip');
+    final font = img.BitmapFont.fromZip(fontZipFile.buffer.asUint8List());
 
-    var bitStream = List<int>.from(await getBitStream());
+    final image = img.decodeJpg(
+        (await rootBundle.load('assets/thumbnailTemplate.jpeg'))
+            .buffer
+            .asUint8List())!;
+
+    final streamTime = _getStreamTime();
+    const xCord = 385;
+    const yCord = 200;
+    final text =
+        "${streamTime.day}-${_prefix0(streamTime.month)}-${_prefix0(streamTime.year)}";
+
+    img.drawString(
+      image,
+      text,
+      font: font,
+      x: xCord,
+      y: yCord,
+    );
+
+    return img.encodeJpg(image);
+  }
+
+  static void setThumbnail(String videoId) async {
+    var bitStream = List<int>.from(await getThumbnail());
 
     _youtubeClient!.thumbnails.set(videoId,
         uploadMedia: Media(Stream.value(bitStream), bitStream.length));

@@ -151,7 +151,6 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
                   padding: EdgeInsets.only(bottom: 8.0, right: 10.0, top: 8.0),
                   child: Text(
                     "Help",
-                    style: TextStyle(color: Colors.white),
                   ),
                 )
               ],
@@ -165,18 +164,14 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: FractionallySizedBox(
-                widthFactor: 0.2,
-                // widthFactor: 0.6,
-                child: AspectRatio(
-                  aspectRatio: 10 / 3,
-                  child: ElevatedButton(
-                      onPressed: () async {
-                        _confirmSchedule(await _confirmText());
-                      },
-                      child: const Text("Schedule Stream")),
-                ),
-              ),
+              child: ElevatedButton(
+                  onPressed: () async {
+                    _confirmSchedule(await _confirmText());
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Text("Schedule Stream"),
+                  )),
             ),
             Text(_singleton.message),
             ElevatedButton(
@@ -211,7 +206,7 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
 }
 
 class _SigninPage extends StatefulWidget {
-  const _SigninPage({super.key});
+  const _SigninPage();
 
   @override
   State<_SigninPage> createState() => _SigninPageState();

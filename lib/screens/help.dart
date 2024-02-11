@@ -96,7 +96,7 @@ class HelpPageWidget extends StatelessWidget {
             padding: EdgeInsets.only(bottom: 8.0, right: 10.0, top: 8.0),
             child: Text(
               "Help",
-              style: TextStyle(color: Colors.white),
+              // style: TextStyle(color: Colors.white),
             ),
           )
         ],
