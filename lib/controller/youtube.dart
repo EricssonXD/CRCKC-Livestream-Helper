@@ -57,9 +57,9 @@ class Youtube {
     try {
       DateTime streamTime = _getStreamTime();
 
-      List<String> data = await CrckcHelperAPI.get();
+      CrckcStreamData data = await CrckcHelperAPI.getNewestData();
       String streamTitle =
-          "${dateTimetoTitleString(streamTime)} 講員：${data[0]} / 講題：${data[1]} / 經文：${data[2]}";
+          "${dateTimetoTitleString(streamTime)} 講員：${data.speaker} / 講題：${data.topic} / 經文：${data.verse}";
       bool autoStart = OptionSingleton().autoStart;
 
       var response = await _youtubeClient?.liveBroadcasts.insert(
@@ -99,9 +99,9 @@ class Youtube {
       // js.context.callMethod('open', [liveStreamUrl, '_blank']);
       // _data["ytControlUrl"] = liveStreamUrl;
       String whatsappMessage = '''${dateTimetoTitleString(streamTime)} 禮中堂主日崇拜
-講員：${data[0]}
-講題：${data[1]}
-經文：${data[2]}
+講員：${data.speaker}
+講題：${data.topic}
+經文：${data.verse}
 
 $ytlink
 

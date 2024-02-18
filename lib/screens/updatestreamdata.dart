@@ -22,25 +22,22 @@ class _StreamDataScreenState extends State<StreamDataScreen> {
   Future _submitForm() => showDialog(
       context: context,
       builder: (context) {
-        String timeNow = DateTime.now().toString();
-        List<String> row = [
-          speaker.text,
-          topic.text,
-          verse.text,
-          //add an "a" to prevent weird bug
-          "${timeNow}a",
-        ];
+        final data = CrckcStreamData(
+          speaker: speaker.text,
+          topic: topic.text,
+          verse: verse.text,
+        );
 
         submit(bool confirm) async {
           Navigator.of(context).pop();
           if (confirm) {
-            CrckcHelperAPI.addData(row);
+            CrckcHelperAPI.addData(data);
           }
         }
 
         return AlertDialog(
           title: Text(
-              "Confirm Changed Data?\n\n講員: ${row[0]}\n講題: ${row[1]}\n經文: ${row[2]}"),
+              "Confirm Changed Data?\n\n講員: ${data.speaker}\n講題: ${data.topic}\n經文: ${data.verse}"),
           actions: [
             // TextButton(
             //     onPressed: (() => SystemChannels.platform

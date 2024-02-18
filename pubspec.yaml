@@ -48,6 +48,7 @@ dependencies:
   url_launcher: ^6.1.6
   shared_preferences: ^2.0.15
   image: ^4.1.7
+  dio: ^5.4.1
   # screenshot: ^1.2.3
 
 dev_dependencies:

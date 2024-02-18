@@ -1,41 +1,74 @@
-import 'package:gsheets/gsheets.dart';
-import 'package:crckclivestreamhelper/auth/secrets.dart';
+import 'package:dio/dio.dart';
 
-class CrckcHelperAPI {
-  static const _credentials = SECRETS.gSheetCredentials; //Secret
-  static const _spreadsheetId = SECRETS.gSheetId;
-  //Secret
+abstract class CrckcHelperAPI {
+  static const _getPath = '/exec';
 
-  static final _gsheets = GSheets(_credentials);
-  static Worksheet? _userSheet;
+  static final _dio = Dio(
+    BaseOptions(
+      baseUrl:
+          'https://script.google.com/macros/s/AKfycbzZ6KbU-tPYTxZQHMFFW3kSCxRvu0lGk_ysFbJ2r2FEHMdo-c9fACAUkD3cMdGuKqaUCQ',
+    ),
+  );
 
-  static Future init() async {
-    final spreadsheet = await _gsheets.spreadsheet(_spreadsheetId);
-    _userSheet = await _getWorkSheet(spreadsheet, title: 'DataToday');
-    _userSheet!.values
-        .insertRow(1, ["Speaker", "Topic", "Verse", "Update Time"]);
+  static Future<CrckcStreamData> getNewestData() async {
+    final response = await _dio.get(
+      _getPath,
+      queryParameters: {
+        "action": "getNewest",
+      },
+    );
+
+    return CrckcStreamData.fromJson(response.data["data"]);
   }
 
-  static Future<Worksheet> _getWorkSheet(
-    Spreadsheet spreadsheet, {
-    required String title,
-  }) async {
-    try {
-      return await spreadsheet.addWorksheet(title);
-    } catch (e) {
-      // print(e);
-      return spreadsheet.worksheetByTitle(title)!;
-    }
+  static Future<dynamic> addData(CrckcStreamData data) async {
+    final response = await _dio.get(
+      _getPath,
+      queryParameters: {
+        "action": "addData",
+        ...data.toJson(),
+      },
+    );
+
+    return response.data;
+  }
+}
+
+class CrckcStreamData {
+  CrckcStreamData({
+    required this.speaker,
+    required this.topic,
+    required this.verse,
+    DateTime? updateTime,
+  }) {
+    this.updateTime = updateTime ?? DateTime.now();
   }
 
-  static Future addData(List<String> rowList) async {
-    if (_userSheet == null) return;
-    _userSheet!.deleteRow(11);
-    await _userSheet!.insertRow(2);
-    _userSheet!.values.insertRow(2, rowList);
+  final String speaker;
+  final String topic;
+  final String verse;
+  late final DateTime updateTime;
+
+  factory CrckcStreamData.fromJson(Map<String, dynamic> json) {
+    return CrckcStreamData(
+      speaker: json['speaker'].toString(),
+      topic: json['topic'].toString(),
+      verse: json['verse'].toString(),
+      updateTime: DateTime.fromMillisecondsSinceEpoch(json['update_time']),
+    );
   }
 
-  static Future<List<String>> get() async {
-    return _userSheet!.values.row(2);
+  Map<String, dynamic> toJson() {
+    return {
+      'speaker': speaker,
+      'topic': topic,
+      'verse': verse,
+      'update_time': updateTime.millisecondsSinceEpoch,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'CrckcStreamData(speaker: $speaker, topic: $topic, verse: $verse, updateTime: $updateTime)';
   }
 }
