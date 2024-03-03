@@ -131,7 +131,7 @@ ${SECRETS.churchForm} ''';
     const xCord = 385;
     const yCord = 200;
     final text =
-        "${streamTime.day}-${_prefix0(streamTime.month)}-${_prefix0(streamTime.year)}";
+        "${streamTime.year}-${_prefix0(streamTime.month)}-${_prefix0(streamTime.day)}";
 
     img.drawString(
       image,
