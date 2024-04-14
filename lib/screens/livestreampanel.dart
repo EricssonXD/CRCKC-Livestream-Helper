@@ -109,6 +109,8 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
             if (data.isNotEmpty) {
               callLocalFlask(data[1], useSelenium: _useSelenium);
               launchUrlString(data[0]);
+              // Update stream tools
+              CrckcHelperAPI.updateStreamTools(data[1], data[0]);
             }
           }
         }

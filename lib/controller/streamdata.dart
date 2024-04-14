@@ -32,6 +32,20 @@ abstract class CrckcHelperAPI {
 
     return response.data;
   }
+
+  static Future<dynamic> updateStreamTools(
+      String whatsappMessage, String youtubeStreamPannel) async {
+    final response = await _dio.get(
+      _getPath,
+      queryParameters: {
+        "action": "updateStreamTools",
+        "whatsapp_message": whatsappMessage,
+        "stream_panel_url": youtubeStreamPannel,
+      },
+    );
+
+    return response.data;
+  }
 }
 
 class CrckcStreamData {
